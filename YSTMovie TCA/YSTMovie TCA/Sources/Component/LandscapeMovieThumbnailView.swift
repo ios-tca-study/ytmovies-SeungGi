@@ -24,6 +24,17 @@ struct VerticalMovieThumbnailViewRegular: View {
         .fill(.gray50)
         .frame(maxWidth: .infinity)
         .aspectRatio(3/2, contentMode: .fit)
+        .overlay {
+          ZStack {
+            (isBookmarked ? Image.bookmark_fill : Image.bookmark)
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(height: 24)
+              .foregroundStyle(isBookmarked ? .accent : .white)
+          }
+          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+          .padding(16)
+        }
       
       VStack(spacing: 4) {
         Text(title)
@@ -42,18 +53,7 @@ struct VerticalMovieThumbnailViewRegular: View {
         .frame(maxWidth: .infinity, alignment: .leading)
       }
     }
-    .frame(maxWidth: 300)
-    .overlay {
-      ZStack {
-        (isBookmarked ? Image.bookmark_fill : Image.bookmark)
-          .resizable()
-          .aspectRatio(contentMode: .fit)
-          .frame(height: 24)
-          .foregroundStyle(isBookmarked ? .accent : .white)
-      }
-      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-      .padding(16)
-    }
+    .frame(width: 300)
   }
 }
 
