@@ -28,17 +28,9 @@ struct HomeView: View {
   
   private func topFiveSection() -> some View {
     VStack(spacing: 20) {
-      HStack(spacing: 0) {
-        Text("Top Five")
-          .font(.system(size: 30, weight: .bold))
-          .foregroundStyle(.white)
-        
-        Text(".")
-          .font(.system(size: 30, weight: .bold))
-          .foregroundStyle(.accent)
-      }
-      .frame(maxWidth: .infinity, alignment: .leading)
-      .padding(.horizontal, 16)
+      LargeTitleText(title: "Top Five")
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 16)
       
       ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 20) {
@@ -57,13 +49,7 @@ struct HomeView: View {
   private func latestSection() -> some View {
     VStack(spacing: 20) {
       HStack(spacing: 0) {
-        Text("Latest")
-          .font(.system(size: 30, weight: .bold))
-          .foregroundStyle(.white)
-        
-        Text(".")
-          .font(.system(size: 30, weight: .bold))
-          .foregroundStyle(.accent)
+        LargeTitleText(title: "Latest")
         
         Spacer()
         
