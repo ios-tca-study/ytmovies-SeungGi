@@ -27,10 +27,14 @@ struct DiscoverView: View {
       ScrollView {
         LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
           ForEach(0..<10) { _ in
-            PortraitMovieThumbnailView(
-              title: "title",
-              rating: 3.5,
-              isBookmarked: false)
+            NavigationLink {
+              DetailView()
+            } label: {
+              PortraitMovieThumbnailView(
+                title: "title",
+                rating: 3.5,
+                isBookmarked: false)
+            }
           }
         }
         .padding(.horizontal, 16)

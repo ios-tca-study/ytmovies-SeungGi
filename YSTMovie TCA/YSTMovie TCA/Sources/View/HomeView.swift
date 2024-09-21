@@ -40,10 +40,14 @@ struct HomeView: View {
       ScrollView(.horizontal, showsIndicators: false) {
         HStack(spacing: 20) {
           ForEach(0..<5) { _ in
-            VerticalMovieThumbnailViewRegular(
-              title: "title",
-              rating: 3.5,
-              isBookmarked: false)
+            NavigationLink {
+              DetailView()
+            } label: {
+              VerticalMovieThumbnailViewRegular(
+                title: "title",
+                rating: 3.5,
+                isBookmarked: false)
+            }
           }
         }
         .padding(.horizontal, 16)
@@ -69,13 +73,17 @@ struct HomeView: View {
       .frame(maxWidth: .infinity, alignment: .leading)
       .padding(.horizontal, 16)
       
-      VerticalMovieThumbnailViewLarge(
-        title: "title",
-        rating: 3.5,
-        genre: ["Action", "Comedy", "Crime"],
-        description: "description",
-        isBookmarked: false)
-      .padding(16)
+      NavigationLink {
+        DetailView()
+      } label: {
+        VerticalMovieThumbnailViewLarge(
+          title: "title",
+          rating: 3.5,
+          genre: ["Action", "Comedy", "Crime"],
+          description: "description",
+          isBookmarked: false)
+        .padding(16)
+      }
     }
   }
 }

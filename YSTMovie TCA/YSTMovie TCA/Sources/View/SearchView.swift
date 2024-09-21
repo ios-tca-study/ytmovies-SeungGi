@@ -71,12 +71,16 @@ struct SearchView: View {
     ScrollView(showsIndicators: false) {
       VStack(spacing: 20) {
         ForEach(0..<10) { _ in
-          VerticalMovieThumbnailViewLarge(
-            title: "title",
-            rating: 3.5,
-            genre: ["Action", "Comedy", "Crime"],
-            description: "description",
-            isBookmarked: false)
+          NavigationLink {
+            DetailView()
+          } label: {
+            VerticalMovieThumbnailViewLarge(
+              title: "title",
+              rating: 3.5,
+              genre: ["Action", "Comedy", "Crime"],
+              description: "description",
+              isBookmarked: false)
+          }
         }
       }
       .padding(.horizontal, 16)

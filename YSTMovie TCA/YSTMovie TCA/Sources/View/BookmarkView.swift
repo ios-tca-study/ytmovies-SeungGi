@@ -13,6 +13,7 @@ struct BookmarkView: View {
   
   @Environment(\.dismiss) private var dismiss
   
+  
   // MARK: - Initializers
   
   // MARK: - Views
@@ -47,12 +48,16 @@ struct BookmarkView: View {
     ScrollView(showsIndicators: false) {
       VStack(spacing: 20) {
         ForEach(0..<10) { _ in
-          VerticalMovieThumbnailViewLarge(
-            title: "title",
-            rating: 3.5,
-            genre: ["Action", "Comedy", "Crime"],
-            description: "description",
-            isBookmarked: true)
+          NavigationLink {
+            DetailView()
+          } label: {
+            VerticalMovieThumbnailViewLarge(
+              title: "title",
+              rating: 3.5,
+              genre: ["Action", "Comedy", "Crime"],
+              description: "description",
+              isBookmarked: true)
+          }
         }
       }
       .padding(.horizontal, 16)
