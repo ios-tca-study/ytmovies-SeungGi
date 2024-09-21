@@ -11,6 +11,8 @@ struct HomeView: View {
   
   // MARK: - Properties
   
+  @State private var isDiscoverViewShown = false
+  
   
   // MARK: - Views
   
@@ -24,6 +26,9 @@ struct HomeView: View {
       }
     }
     .background(.black)
+    .navigationDestination(isPresented: $isDiscoverViewShown) {
+      DiscoverView()
+    }
   }
   
   private func topFiveSection() -> some View {
@@ -54,7 +59,7 @@ struct HomeView: View {
         Spacer()
         
         Button {
-          
+          isDiscoverViewShown = true
         } label: {
           Text("SEE MORE")
             .font(.system(size: 16))

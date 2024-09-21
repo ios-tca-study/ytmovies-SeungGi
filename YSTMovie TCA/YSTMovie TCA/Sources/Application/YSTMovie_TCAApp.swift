@@ -11,7 +11,7 @@ import SwiftUI
 struct YSTMovie_TCAApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabView()
         }
     }
 }
