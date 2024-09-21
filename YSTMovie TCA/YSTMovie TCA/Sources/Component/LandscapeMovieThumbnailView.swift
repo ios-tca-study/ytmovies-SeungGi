@@ -37,7 +37,7 @@ struct VerticalMovieThumbnailViewRegular: View {
             .font(.system(size: 22, weight: .medium))
             .foregroundStyle(.white)
           
-          RatingView(rating: rating)
+          RatingView(rating: rating, starSize: .regular)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
       }

@@ -12,6 +12,21 @@ struct RatingView: View {
   // MARK: - Properties
   
   let rating: Double
+  let starSize: StarSize
+  
+  enum StarSize {
+    case compact
+    case regular
+    
+    var size: CGFloat {
+      switch self {
+      case .compact:
+        return 20
+      case .regular:
+        return 24
+      }
+    }
+  }
   
   
   // MARK: - Views
@@ -23,15 +38,15 @@ struct RatingView: View {
         if currentRating >= 1 {
           Image.star_fill
             .resizable()
-            .frame(width: 24, height: 24)
+            .frame(width: starSize.size, height: starSize.size)
         } else if currentRating == 0.5 {
           Image.star_half
             .resizable()
-            .frame(width: 24, height: 24)
+            .frame(width: starSize.size, height: starSize.size)
         } else {
           Image.star_empty
             .resizable()
-            .frame(width: 24, height: 24)
+            .frame(width: starSize.size, height: starSize.size)
         }
       }
     }
@@ -43,7 +58,7 @@ struct RatingView: View {
 #Preview {
   VStack {
     ForEach(Array(stride(from: 0, to: 5.5, by: 0.5).enumerated()), id: \.offset) { _, rating in
-      RatingView(rating: rating)
+      RatingView(rating: rating, starSize: .regular)
         .padding(.bottom, 10)
     }
   }
