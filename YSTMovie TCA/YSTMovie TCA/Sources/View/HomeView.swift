@@ -6,56 +6,74 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct HomeView: View {
   
   // MARK: - Properties
   
-  @State private var isDiscoverViewShown = false
+  let store: StoreOf<HomeFeature>
+  @State private var didAppear = false
   
   
   // MARK: - Views
   
   var body: some View {
-    ScrollView {
-      VStack(spacing: 30) {
-        topFiveSection()
-          .padding(.top, 33)
-        
-        latestSection()
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
+      ScrollView {
+        VStack(spacing: 30) {
+          topFiveSection(viewStore: viewStore)
+            .padding(.top, 33)
+          
+          latestSection(viewStore: viewStore)
+        }
       }
-    }
-    .background(.black)
-    .navigationDestination(isPresented: $isDiscoverViewShown) {
-      DiscoverView()
+      .background(Color.black)
+      .navigationDestination(
+        isPresented: viewStore.binding(
+          get: \.isDiscoverViewShown,
+          send: HomeFeature.Action.showDiscoverView
+        )
+      ) {
+        DiscoverView()
+      }
+      .onAppear {
+        if didAppear == false {
+          viewStore.send(.loadData)
+          didAppear = true
+        }
+      }
     }
   }
   
-  private func topFiveSection() -> some View {
+  private func topFiveSection(viewStore: ViewStore<HomeFeature.State, HomeFeature.Action>) -> some View {
     VStack(spacing: 20) {
       LargeTitleText(title: "Top Five")
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
       
-      ScrollView(.horizontal, showsIndicators: false) {
-        HStack(spacing: 20) {
-          ForEach(0..<5) { _ in
-            NavigationLink {
-              DetailView()
-            } label: {
-              VerticalMovieThumbnailViewRegular(
-                title: "title",
-                rating: 3.5,
-                isBookmarked: false)
+      if viewStore.isLoading {
+        VStack {
+          ProgressView()
+            .tint(.white)
+        }
+        .frame(height: 266)
+      } else {
+        ScrollView(.horizontal, showsIndicators: false) {
+          HStack(alignment: .top, spacing: 20) {
+            ForEach(viewStore.topFiveMovies) { movie in
+              NavigationLink(destination: DetailView()) {
+                LandscapeMovieThumbnailViewRegular(movie: movie)
+              }
             }
           }
+          .padding(.horizontal, 16)
         }
-        .padding(.horizontal, 16)
       }
     }
   }
   
-  private func latestSection() -> some View {
+  private func latestSection(viewStore: ViewStore<HomeFeature.State, HomeFeature.Action>) -> some View {
     VStack(spacing: 20) {
       HStack(spacing: 0) {
         LargeTitleText(title: "Latest")
@@ -63,34 +81,51 @@ struct HomeView: View {
         Spacer()
         
         Button {
-          isDiscoverViewShown = true
+          viewStore.send(.showDiscoverView(true))
         } label: {
-          Text("SEE MORE")
-            .font(.system(size: 16))
-            .foregroundStyle(.accent)
+          if !viewStore.isLoading {
+            Text("SEE MORE")
+              .font(.system(size: 16))
+              .foregroundColor(.accentColor)
+          }
         }
       }
       .frame(maxWidth: .infinity, alignment: .leading)
       .padding(.horizontal, 16)
       
-      NavigationLink {
-        DetailView()
-      } label: {
-        VerticalMovieThumbnailViewLarge(
-          title: "title",
-          rating: 3.5,
-          genre: ["Action", "Comedy", "Crime"],
-          description: "description",
-          isBookmarked: false)
-        .padding(16)
+      if let latestMovie = viewStore.latestMovie {
+        if viewStore.isLoading {
+          VStack {
+            ProgressView()
+              .tint(.white)
+          }
+          .frame(height: 266)
+        } else {
+          NavigationLink(destination: DetailView()) {
+            PortraitMovieThumbnailViewLarge(movie: latestMovie)
+            .padding(16)
+          }
+        }
       }
     }
   }
 }
 
+#if DEBUG
+import Moya
 
-// MARK: - Preview
-
-#Preview {
-  HomeView()
+struct HomeView_Previews: PreviewProvider {
+  static var previews: some View {
+    let service = MoyaProvider<YTSAPI>()
+    let repository = YTSMovieRepositoryImpl(service: service)
+    let latestMovieUseCase = LatestMovieUseCase(repository: repository)
+    let topFiveMovieUseCase = TopFiveMovieUseCase(repository: repository)
+    
+    let store = Store(initialState: HomeFeature.State()) {
+      HomeFeature(latestMovieUseCase: latestMovieUseCase, topFiveMovieUseCase: topFiveMovieUseCase)
+    }
+    
+    HomeView(store: store)
+  }
 }
+#endif

@@ -74,12 +74,7 @@ struct SearchView: View {
           NavigationLink {
             DetailView()
           } label: {
-            VerticalMovieThumbnailViewLarge(
-              title: "title",
-              rating: 3.5,
-              genre: ["Action", "Comedy", "Crime"],
-              description: "description",
-              isBookmarked: false)
+            PortraitMovieThumbnailViewLarge(movie: .mock)
           }
         }
       }

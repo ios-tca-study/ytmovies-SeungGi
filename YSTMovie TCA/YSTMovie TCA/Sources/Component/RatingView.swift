@@ -28,13 +28,15 @@ struct RatingView: View {
     }
   }
   
-  
   // MARK: - Views
   
   var body: some View {
     HStack(spacing: 5) {
+      // 0~10 rating을 0~5로 환산
+      let normalizedRating = rating / 2
+      
       ForEach(0..<5) { index in
-        let currentRating = rating - Double(index)
+        let currentRating = normalizedRating - Double(index)
         if currentRating >= 1 {
           Image.star_fill
             .resizable()
@@ -57,7 +59,7 @@ struct RatingView: View {
 
 #Preview {
   VStack {
-    ForEach(Array(stride(from: 0, to: 5.5, by: 0.5).enumerated()), id: \.offset) { _, rating in
+    ForEach(Array(stride(from: 0, to: 10.5, by: 0.5).enumerated()), id: \.offset) { _, rating in
       RatingView(rating: rating, starSize: .regular)
         .padding(.bottom, 10)
     }

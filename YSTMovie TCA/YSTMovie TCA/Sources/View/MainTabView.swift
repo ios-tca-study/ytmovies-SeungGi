@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Moya
+import ComposableArchitecture
 
 struct MainTabView: View {
   
@@ -25,7 +27,15 @@ struct MainTabView: View {
         // Views for each tab
         switch selectedTab {
         case .home:
-          HomeView()
+          let service = MoyaProvider<YTSAPI>()
+          let repository = YTSMovieRepositoryImpl(service: service)
+          let latestMovieUseCase = LatestMovieUseCase(repository: repository)
+          let topFiveMovieUseCase = TopFiveMovieUseCase(repository: repository)
+          let store = Store(initialState: HomeFeature.State()) {
+            HomeFeature(latestMovieUseCase: latestMovieUseCase, topFiveMovieUseCase: topFiveMovieUseCase)
+          }
+          HomeView(store: store)
+          
         case .search:
           SearchView()
         case .bookmark:

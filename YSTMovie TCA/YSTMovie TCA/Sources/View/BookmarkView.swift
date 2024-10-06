@@ -51,12 +51,7 @@ struct BookmarkView: View {
           NavigationLink {
             DetailView()
           } label: {
-            VerticalMovieThumbnailViewLarge(
-              title: "title",
-              rating: 3.5,
-              genre: ["Action", "Comedy", "Crime"],
-              description: "description",
-              isBookmarked: true)
+            PortraitMovieThumbnailViewLarge(movie: .mock)
           }
         }
       }
