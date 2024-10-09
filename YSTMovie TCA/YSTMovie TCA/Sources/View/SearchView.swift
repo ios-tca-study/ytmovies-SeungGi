@@ -86,13 +86,25 @@ struct SearchView: View {
   
   private func searchResult(viewStore: ViewStoreType) -> some View {
     ScrollView(showsIndicators: false) {
-      VStack(spacing: 20) {
+      LazyVStack(spacing: 20) {
         ForEach(viewStore.movies) { movie in
           NavigationLink {
             DetailView()
           } label: {
             PortraitMovieThumbnailViewLarge(movie: movie)
           }
+        }
+
+        // 맨 마지막으로 스크롤 했을때 ProgressView onAppear 시점에
+        // 더 불러오기
+        if !viewStore.movies.isEmpty && viewStore.isLoading {
+          VStack {
+            ProgressView()
+              .onAppear {
+                store.send(.loadMore)
+              }
+          }
+          .frame(height: 100)
         }
       }
       .padding(.horizontal, 16)

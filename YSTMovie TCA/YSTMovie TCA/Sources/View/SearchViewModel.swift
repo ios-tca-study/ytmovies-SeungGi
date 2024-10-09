@@ -64,10 +64,21 @@ struct SearchFeature: Reducer {
       }
       
     case .loadMore:
-      // 더 불러오기는 기존에 Page를 +1 한 후
-      // state에 있는 term을 이용해서 search 액션 재활용
+      state.isLoading = true
       state.page += 1
-      return .send(.search(term: state.term))
+      let currentTerm = state.term
+      let currentPage = state.page
+      
+      if currentTerm.isEmpty {
+        state.isLoading = false
+        return .none
+      } else {
+        return .run { send in
+          let movies = try await searchMovieUseCase.execute(term: currentTerm, limit: 5, page: currentPage)
+          await send(.appendMovies(movies))
+          await send(.setLoadingState(false))
+        }
+      }
       
     case .setMovies(let movies):
       state.movies = movies
