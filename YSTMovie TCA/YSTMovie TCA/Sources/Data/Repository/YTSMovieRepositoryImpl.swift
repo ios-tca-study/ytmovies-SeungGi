@@ -31,8 +31,8 @@ struct YTSMovieRepositoryImpl: YTSMovieRepository {
         case .success(let response):
           do {
             let movieResponseDTO = try JSONDecoder().decode(MovieResponseDTO.self, from: response.data)
-            let movies = movieResponseDTO.data.movies.map { $0.toDomain() }
-            continuation.resume(returning: movies)
+            let movies = movieResponseDTO.data.movies?.map { $0.toDomain() }
+            continuation.resume(returning: movies ?? [])
           } catch {
             continuation.resume(throwing: error)
           }
