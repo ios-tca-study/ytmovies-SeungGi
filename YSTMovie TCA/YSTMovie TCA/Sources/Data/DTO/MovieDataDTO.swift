@@ -8,5 +8,5 @@
 import Foundation
 
 struct MovieDataDTO: Decodable {
-  let movies: [MovieDTO]
+  let movies: [MovieDTO]?
 }

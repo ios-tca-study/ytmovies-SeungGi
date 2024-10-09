@@ -37,7 +37,14 @@ struct MainTabView: View {
           HomeView(store: store)
           
         case .search:
-          SearchView()
+          let service = MoyaProvider<YTSAPI>()
+          let repository = YTSMovieRepositoryImpl(service: service)
+          let searchMovieUseCase = SearchMovieUseCase(repository: repository)
+          let store = Store(initialState: SearchFeature.State()) {
+            SearchFeature(searchMovieUseCase: searchMovieUseCase)
+          }
+          SearchView(store: store)
+          
         case .bookmark:
           BookmarkView()
         }

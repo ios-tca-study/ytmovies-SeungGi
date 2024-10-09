@@ -6,28 +6,41 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct SearchView: View {
   
   // MARK: - Properties
   
+  let store: StoreOf<SearchFeature>
+  typealias ViewStoreType = ViewStore<SearchFeature.State, SearchFeature.Action>
+  
   @Environment(\.dismiss) private var dismiss
+  @FocusState private var isFocused
   
   // MARK: - Initializers
   
   // MARK: - Views
   
   var body: some View {
-    VStack {
-      navigationView()
-        .padding(.top, 33)
-      
-      textField()
-        .padding(.horizontal, 16)
-      
-      searchResult()
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
+      VStack {
+        navigationView()
+          .padding(.top, 33)
+        
+        textField(viewStore: viewStore)
+          .padding(.horizontal, 16)
+        
+        if viewStore.isLoading && viewStore.page == 1 {
+          Spacer()
+          ProgressView()
+          Spacer()
+        } else {
+          searchResult(viewStore: viewStore)
+        }
+      }
+      .background(.black)
     }
-    .background(.black)
   }
   
   private func navigationView() -> some View {
@@ -46,7 +59,7 @@ struct SearchView: View {
     .padding(.horizontal, 16)
   }
   
-  private func textField() -> some View {
+  private func textField(viewStore: ViewStoreType) -> some View {
     RoundedRectangle(cornerRadius: 10)
       .fill(.gray70)
       .frame(maxWidth: .infinity, maxHeight: 70)
@@ -57,24 +70,28 @@ struct SearchView: View {
             .frame(width: 20, height: 20)
             .foregroundStyle(.white)
           
-          TextField("Search", text: .constant(""))
+          TextField("Search", text: viewStore.binding(get: \.term, send: SearchFeature.Action.termChanged))
             .font(.system(size: 18, weight: .medium))
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
             .frame(maxHeight: .infinity)
+            .focused($isFocused)
         }
         .padding(.horizontal, 16)
       }
+      .onAppear {
+        isFocused = true
+      }
   }
   
-  private func searchResult() -> some View {
+  private func searchResult(viewStore: ViewStoreType) -> some View {
     ScrollView(showsIndicators: false) {
       VStack(spacing: 20) {
-        ForEach(0..<10) { _ in
+        ForEach(viewStore.movies) { movie in
           NavigationLink {
             DetailView()
           } label: {
-            PortraitMovieThumbnailViewLarge(movie: .mock)
+            PortraitMovieThumbnailViewLarge(movie: movie)
           }
         }
       }
@@ -87,6 +104,20 @@ struct SearchView: View {
 
 // MARK: - Preview
 
-#Preview {
-  SearchView()
+#if DEBUG
+import Moya
+
+struct SearchView_Previews: PreviewProvider {
+  static var previews: some View {
+    let service = MoyaProvider<YTSAPI>()
+    let repository = YTSMovieRepositoryImpl(service: service)
+    let searchMovieUseCase = SearchMovieUseCase(repository: repository)
+    
+    let store = Store(initialState: SearchFeature.State()) {
+      SearchFeature(searchMovieUseCase: searchMovieUseCase)
+    }
+    
+    SearchView(store: store)
+  }
 }
+#endif
