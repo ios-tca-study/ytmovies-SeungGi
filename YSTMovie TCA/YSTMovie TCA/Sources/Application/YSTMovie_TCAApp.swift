@@ -9,9 +9,24 @@ import SwiftUI
 
 @main
 struct YSTMovie_TCAApp: App {
-    var body: some Scene {
-        WindowGroup {
-            MainTabView()
-        }
+  
+  init() {
+    loadRocketSimConnect()
+  }
+  
+  var body: some Scene {
+    WindowGroup {
+      MainTabView()
     }
+  }
+  
+  private func loadRocketSimConnect() {
+    #if DEBUG
+    guard (Bundle(path: "/Applications/RocketSim.app/Contents/Frameworks/RocketSimConnectLinker.nocache.framework")?.load() == true) else {
+      print("Failed to load linker framework")
+      return
+    }
+    print("RocketSim Connect successfully linked")
+    #endif
+  }
 }

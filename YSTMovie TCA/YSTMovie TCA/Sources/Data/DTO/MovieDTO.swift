@@ -13,7 +13,7 @@ struct MovieDTO: Decodable {
   let thumbnailImageUrl: String
   let descriptionFull: String
   let rating: Double
-  let genres: [String]
+  let genres: [String]?
   
   enum CodingKeys: String, CodingKey {
     case id
@@ -36,7 +36,7 @@ extension MovieDTO {
       description: descriptionFull,
       rating: rating,
       isBookmarked: false, // API에서 북마크 상태를 제공하지 않으므로 기본값 사용
-      genre: genres
+      genre: genres ?? []
     )
   }
 }

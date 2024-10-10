@@ -24,7 +24,7 @@ struct YTSMovieRepositoryImpl: YTSMovieRepository {
   
   // MARK: - Public Methods
   
-  public func fetchMovie(limit: Int, page: Int?, term: String?, genre: String?, sortBy: SortBy?) async throws -> [Movie] {
+  public func fetchMovie(limit: Int, page: Int?, term: String?, genre: Genre?, sortBy: SortBy?) async throws -> [Movie] {
     return try await withCheckedThrowingContinuation { continuation in
       service.request(.fetchMovie(limit: limit, page: page, term: term, genre: genre, sortBy: sortBy)) { result in
         switch result {

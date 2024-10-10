@@ -35,7 +35,13 @@ struct HomeView: View {
           send: HomeFeature.Action.showDiscoverView
         )
       ) {
-        DiscoverView()
+        let service = MoyaProvider<YTSAPI>()
+        let repository = YTSMovieRepositoryImpl(service: service)
+        let searchMovieUseCase = SearchMovieUseCase(repository: repository)
+        let store = Store(initialState: DiscoverFeature.State()) {
+          DiscoverFeature(searchMovieUseCase: searchMovieUseCase)
+        }
+        DiscoverView(store: store)
       }
       .onAppear {
         if didAppear == false {

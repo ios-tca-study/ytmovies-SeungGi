@@ -24,11 +24,12 @@ struct SearchMovieUseCase {
   // MARK: - Public Methods
   
   public func execute(
-    term: String,
+    term: String?,
     limit: Int,
-    page: Int
+    page: Int,
+    genre: Genre? = nil
   ) async throws -> [Movie] {
-    let movies = try await repository.fetchMovie(limit: limit, page: page, term: term, genre: nil, sortBy: nil)
+    let movies = try await repository.fetchMovie(limit: limit, page: page, term: term, genre: genre, sortBy: nil)
     return movies
   }
 }

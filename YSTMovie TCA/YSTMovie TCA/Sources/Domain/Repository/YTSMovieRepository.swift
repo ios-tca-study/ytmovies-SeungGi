@@ -8,5 +8,5 @@
 import Foundation
 
 protocol YTSMovieRepository {
-  func fetchMovie(limit: Int, page: Int?, term: String?, genre: String?, sortBy: SortBy?) async throws -> [Movie]
+  func fetchMovie(limit: Int, page: Int?, term: String?, genre: Genre?, sortBy: SortBy?) async throws -> [Movie]
 }
