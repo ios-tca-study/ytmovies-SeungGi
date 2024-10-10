@@ -13,7 +13,6 @@ struct HomeView: View {
   // MARK: - Properties
   
   let store: StoreOf<HomeFeature>
-  @State private var didAppear = false
   
   
   // MARK: - Views
@@ -43,11 +42,8 @@ struct HomeView: View {
         }
         DiscoverView(store: store)
       }
-      .onAppear {
-        if didAppear == false {
-          viewStore.send(.loadData)
-          didAppear = true
-        }
+      .onFirstAppear {
+        viewStore.send(.loadData)
       }
     }
   }

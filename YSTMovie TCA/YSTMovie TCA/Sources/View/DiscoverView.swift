@@ -78,7 +78,7 @@ struct DiscoverView: View {
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .background(.black)
       .toolbarVisibility(.hidden, for: .navigationBar)
-      .onAppear {
+      .onFirstAppear {
         viewStore.send(.search)
       }
     }
