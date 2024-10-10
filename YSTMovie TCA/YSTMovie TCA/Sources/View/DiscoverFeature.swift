@@ -49,6 +49,7 @@ struct DiscoverFeature: Reducer {
     case .search:
       state.page = 1
       state.isLoading = true
+      state.movies.removeAll()
       let currentGenre = state.genre
     
       return .run { send in
@@ -82,6 +83,8 @@ struct DiscoverFeature: Reducer {
       return .none
       
     case .setGenre(let genre):
+      // 기존에 선택했던 장르와 같다면 리턴
+      if state.genre == genre { return .none }
       state.genre = genre
       return .send(.search)
     }
