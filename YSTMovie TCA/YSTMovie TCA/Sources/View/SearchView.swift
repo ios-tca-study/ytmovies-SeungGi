@@ -92,6 +92,11 @@ struct SearchView: View {
             DetailView()
           } label: {
             PortraitMovieThumbnailViewLarge(movie: movie)
+              .onFirstAppear {
+                if movie == viewStore.state.movies.last {
+                  store.send(.loadMore)
+                }
+              }
           }
         }
 
@@ -100,9 +105,6 @@ struct SearchView: View {
         if !viewStore.movies.isEmpty && viewStore.isLoading {
           VStack {
             ProgressView()
-              .onAppear {
-                store.send(.loadMore)
-              }
           }
           .frame(height: 100)
         }
