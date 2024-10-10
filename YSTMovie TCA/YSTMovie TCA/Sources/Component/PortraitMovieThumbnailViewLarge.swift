@@ -71,6 +71,7 @@ struct PortraitMovieThumbnailViewLarge: View {
           .foregroundStyle(.gray30)
           .frame(maxWidth: .infinity, alignment: .leading)
           .multilineTextAlignment(.leading)
+          .lineLimit(5)
       }
     }
   }
