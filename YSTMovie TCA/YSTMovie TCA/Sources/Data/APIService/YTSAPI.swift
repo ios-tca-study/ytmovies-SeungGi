@@ -9,7 +9,7 @@ import Foundation
 import Moya
 
 enum YTSAPI {
-  case fetchMovie(limit: Int, page: Int?, term: String?, genre: String?, sortBy: SortBy?)
+  case fetchMovie(limit: Int, page: Int?, term: String?, genre: Genre?, sortBy: SortBy?)
 }
 
 extension YTSAPI: TargetType {
@@ -40,7 +40,7 @@ extension YTSAPI: TargetType {
       }
       
       if let genre = genre {
-        parameters["genre"] = genre
+        parameters["genre"] = genre.rawValue
       }
       
       if let sortBy = sortBy {
