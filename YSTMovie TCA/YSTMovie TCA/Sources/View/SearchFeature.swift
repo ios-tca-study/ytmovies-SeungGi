@@ -1,5 +1,5 @@
 //
-//  SearchViewModel.swift
+//  SearchFeature.swift
 //  YSTMovie TCA
 //
 //  Created by 이승기 on 10/9/24.

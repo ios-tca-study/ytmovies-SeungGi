@@ -1,5 +1,5 @@
 //
-//  HomeViewModel.swift
+//  HomeFeature.swift
 //  YSTMovie TCA
 //
 //  Created by 이승기 on 10/6/24.
