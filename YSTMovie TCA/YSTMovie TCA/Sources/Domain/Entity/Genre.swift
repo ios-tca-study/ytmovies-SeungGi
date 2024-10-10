@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Genre: String, Codable {
+enum Genre: String, Codable, CaseIterable {
   case all = "all"
   case action = "action"
   case adventure = "adventure"
@@ -34,4 +34,37 @@ enum Genre: String, Codable {
   case thriller = "thriller"
   case war = "war"
   case western = "western"
+}
+
+extension Genre {
+  var displayName: String {
+    switch self {
+    case .all: return "All"
+    case .action: return "Action"
+    case .adventure: return "Adventure"
+    case .animation: return "Animation"
+    case .biography: return "Biography"
+    case .crime: return "Crime"
+    case .documentary: return "Documentary"
+    case .drama: return "Drama"
+    case .family: return "Family"
+    case .fantasy: return "Fantasy"
+    case .filmNoir: return "Film-Noir"
+    case .gameShow: return "Game Show"
+    case .history: return "History"
+    case .horror: return "Horror"
+    case .music: return "Music"
+    case .musical: return "Musical"
+    case .mystery: return "Mystery"
+    case .news: return "News"
+    case .realityTV: return "Reality TV"
+    case .romance: return "Romance"
+    case .sciFi: return "Sci-Fi"
+    case .sport: return "Sport"
+    case .talkShow: return "Talk Show"
+    case .thriller: return "Thriller"
+    case .war: return "War"
+    case .western: return "Western"
+    }
+  }
 }

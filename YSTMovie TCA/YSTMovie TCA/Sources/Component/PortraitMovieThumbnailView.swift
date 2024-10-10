@@ -6,33 +6,39 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct PortraitMovieThumbnailView: View {
   
   // MARK: - Properties
   
-  let title: String
-  let rating: Double
-  let isBookmarked: Bool
+  let movie: Movie
   
   
   // MARK: - Views
   
   var body: some View {
     VStack(spacing: 5) {
-      RoundedRectangle(cornerRadius: 15)
-        .fill(.gray50)
-        .aspectRatio(2/3, contentMode: .fit)
+      ZStack {
+        Color.gray50
+          .overlay {
+            KFImage(URL(string: movie.thumbnailImageUrl))
+              .resizable()
+              .aspectRatio(contentMode: .fill)
+          }
+      }
+      .aspectRatio(2/3, contentMode: .fit)
+      .clipShape(RoundedRectangle(cornerRadius: 15))
      
       VStack(spacing: 0) {
-        Text(title)
+        Text(movie.title)
           .font(.system(size: 18, weight: .semibold))
           .frame(maxWidth: .infinity, alignment: .leading)
           .multilineTextAlignment(.leading)
           .foregroundStyle(.white)
         
         HStack(spacing: 5) {
-          Text(rating.description)
+          Text(movie.rating.description)
             .font(.system(size: 18, weight: .medium))
             .foregroundStyle(.white)
           
@@ -46,11 +52,11 @@ struct PortraitMovieThumbnailView: View {
     .frame(maxWidth: .infinity)
     .overlay {
       ZStack {
-        (isBookmarked ? Image.bookmark_fill : Image.bookmark)
+        (movie.isBookmarked ? Image.bookmark_fill : Image.bookmark)
           .resizable()
           .aspectRatio(contentMode: .fit)
           .frame(height: 24)
-          .foregroundStyle(isBookmarked ? .accent : .white)
+          .foregroundStyle(movie.isBookmarked ? .accent : .white)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
       .padding(16)
@@ -63,10 +69,7 @@ struct PortraitMovieThumbnailView: View {
 
 #Preview {
   ZStack {
-    PortraitMovieThumbnailView(
-      title: "titletitletitletitletitletitle",
-      rating: 3.5,
-      isBookmarked: true)
+    PortraitMovieThumbnailView(movie: .mock)
   }
   .frame(maxWidth: .infinity, maxHeight: .infinity)
   .background(.black)
