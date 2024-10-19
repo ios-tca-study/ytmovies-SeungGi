@@ -10,86 +10,44 @@ import Moya
 import ComposableArchitecture
 
 struct MainTabView: View {
-  
-  // MARK: - Properties
-  @State private var selectedTab: Tab = .home
-  
-  enum Tab {
-    case home
-    case search
-    case bookmark
-  }
-  
+
   // MARK: - Views
   var body: some View {
-    NavigationStack {
-      ZStack {
-        // Views for each tab
-        switch selectedTab {
-        case .home:
-          let service = MoyaProvider<YTSAPI>()
-          let repository = YTSMovieRepositoryImpl(service: service)
-          let latestMovieUseCase = LatestMovieUseCase(repository: repository)
-          let topFiveMovieUseCase = TopFiveMovieUseCase(repository: repository)
-          let store = Store(initialState: HomeFeature.State()) {
-            HomeFeature(latestMovieUseCase: latestMovieUseCase, topFiveMovieUseCase: topFiveMovieUseCase)
-          }
-          HomeView(store: store)
-          
-        case .search:
-          let service = MoyaProvider<YTSAPI>()
-          let repository = YTSMovieRepositoryImpl(service: service)
-          let searchMovieUseCase = SearchMovieUseCase(repository: repository)
-          let store = Store(initialState: SearchFeature.State()) {
-            SearchFeature(searchMovieUseCase: searchMovieUseCase)
-          }
-          SearchView(store: store)
-          
-        case .bookmark:
-          BookmarkView()
+    TabView {
+      Tab("Home", image: "home") {
+        let service = MoyaProvider<YTSAPI>()
+        let repository = YTSMovieRepositoryImpl(service: service)
+        let latestMovieUseCase = LatestMovieUseCase(repository: repository)
+        let topFiveMovieUseCase = TopFiveMovieUseCase(repository: repository)
+        let store = Store(initialState: HomeFeature.State()) {
+          HomeFeature(latestMovieUseCase: latestMovieUseCase, topFiveMovieUseCase: topFiveMovieUseCase)
         }
         
-        VStack {
-          Spacer()
-          HStack {
-            Spacer()
-            
-            TabButton(tab: .home, selectedTab: $selectedTab, iconName: "home")
-            Spacer()
-            TabButton(tab: .search, selectedTab: $selectedTab, iconName: "search")
-            Spacer()
-            TabButton(tab: .bookmark, selectedTab: $selectedTab, iconName: "bookmark")
-            
-            Spacer()
-          }
-          .frame(height: 70)
-          .background(.black)
+        NavigationView {
+          HomeView(store: store)
         }
+      }
+      
+      Tab("Search", image: "search") {
+        let service = MoyaProvider<YTSAPI>()
+        let repository = YTSMovieRepositoryImpl(service: service)
+        let searchMovieUseCase = SearchMovieUseCase(repository: repository)
+        let store = Store(initialState: SearchFeature.State()) {
+          SearchFeature(searchMovieUseCase: searchMovieUseCase)
+        }
+        
+        NavigationView {
+          SearchView(store: store)
+        }
+      }
+      
+      Tab("bookmark", image: "bookmark") {
+        BookmarkView()
       }
     }
     .toolbar(.hidden, for: .navigationBar)
   }
 }
-
-// Tab Button
-struct TabButton: View {
-  let tab: MainTabView.Tab
-  @Binding var selectedTab: MainTabView.Tab
-  let iconName: String
-  
-  var body: some View {
-    Button(action: {
-      selectedTab = tab
-    }) {
-      Image(iconName)
-        .resizable()
-        .scaledToFit()
-        .frame(height: 20)
-        .foregroundColor(selectedTab == tab ? .accentColor : .white)
-    }
-  }
-}
-
 
 // MARK: - Preview
 
