@@ -48,14 +48,18 @@ struct DiscoverView: View {
             VStack {
               LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
                 ForEach(viewStore.movies) { movie in
+                  let store = Store(initialState: DetailFeature.State(movie: movie)) {
+                    DetailFeature()
+                  }
+                  
                   NavigationLink {
-                    DetailView()
+                    DetailView(store: store)
                   } label: {
                     PortraitMovieThumbnailView(movie: movie)
-                    // 마지막 아이템이 처음 보여지는 시점에 데이터를 더 불러오도록 요청
+                      // 마지막 아이템이 처음 보여지는 시점에 데이터를 더 불러오도록 요청
                       .onFirstAppear {
                         if movie == viewStore.state.movies.last {
-                          store.send(.loadMore)
+                          viewStore.send(.loadMore)
                         }
                       }
                   }

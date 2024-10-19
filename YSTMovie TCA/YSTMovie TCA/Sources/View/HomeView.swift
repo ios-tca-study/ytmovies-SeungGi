@@ -64,7 +64,10 @@ struct HomeView: View {
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(alignment: .top, spacing: 20) {
             ForEach(viewStore.topFiveMovies) { movie in
-              NavigationLink(destination: DetailView()) {
+              let store = Store(initialState: DetailFeature.State(movie: movie)) {
+                DetailFeature()
+              }
+              NavigationLink(destination: DetailView(store: store)) {
                 LandscapeMovieThumbnailViewRegular(movie: movie)
               }
             }
@@ -103,7 +106,10 @@ struct HomeView: View {
           }
           .frame(height: 266)
         } else {
-          NavigationLink(destination: DetailView()) {
+          let store = Store(initialState: DetailFeature.State(movie: latestMovie)) {
+            DetailFeature()
+          }
+          NavigationLink(destination: DetailView(store: store)) {
             PortraitMovieThumbnailViewLarge(movie: latestMovie)
             .padding(16)
           }

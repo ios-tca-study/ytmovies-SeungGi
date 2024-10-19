@@ -49,7 +49,7 @@ struct BookmarkView: View {
       VStack(spacing: 20) {
         ForEach(0..<10) { _ in
           NavigationLink {
-            DetailView()
+//            DetailView()
           } label: {
             PortraitMovieThumbnailViewLarge(movie: .mock)
           }

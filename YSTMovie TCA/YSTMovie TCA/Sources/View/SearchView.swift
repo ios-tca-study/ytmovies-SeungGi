@@ -88,13 +88,17 @@ struct SearchView: View {
     ScrollView(showsIndicators: false) {
       LazyVStack(spacing: 20) {
         ForEach(viewStore.movies) { movie in
+          let store = Store(initialState: DetailFeature.State(movie: movie)) {
+            DetailFeature()
+          }
+          
           NavigationLink {
-            DetailView()
+            DetailView(store: store)
           } label: {
             PortraitMovieThumbnailViewLarge(movie: movie)
               .onFirstAppear {
                 if movie == viewStore.state.movies.last {
-                  store.send(.loadMore)
+                  viewStore.send(.loadMore)
                 }
               }
           }

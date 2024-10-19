@@ -6,34 +6,45 @@
 //
 
 import SwiftUI
+import Kingfisher
+import ComposableArchitecture
 
 struct DetailView: View {
   
   // MARK: - Properties
   
+  let store: StoreOf<DetailFeature>
+  typealias ViewStoreType = ViewStore<DetailFeature.State, DetailFeature.Action>
+  
   @Environment(\.dismiss) private var dismiss
   
-  
-  // MARK: - Initializers
   
   // MARK: - Views
   
   var body: some View {
-    ZStack {
-      Color.gray30
-        .ignoresSafeArea()
-      
-      VStack {
-        navigationBar()
+    WithViewStore(self.store, observe: { $0 }) { viewStore in
+      ZStack {
+        Color.black
+          .ignoresSafeArea()
+          .overlay {
+            KFImage(URL(string: viewStore.movie.thumbnailImageUrl))
+              .resizable()
+              .aspectRatio(contentMode: .fill)
+              .ignoresSafeArea()
+          }
         
-        Spacer()
-        
-        contentView()
+        VStack {
+          navigationBar()
+          
+          Spacer()
+          
+          contentView(viewStore: viewStore)
+        }
       }
+      .toolbarVisibility(.hidden, for: .navigationBar)
     }
-    .toolbarVisibility(.hidden, for: .navigationBar)
   }
-  
+    
   private func navigationBar() -> some View {
     HStack {
       Button {
@@ -60,28 +71,28 @@ struct DetailView: View {
     .padding(.top, 43)
   }
   
-  private func contentView() -> some View {
+  private func contentView(viewStore: ViewStoreType) -> some View {
     VStack(spacing: 10) {
-      Text("Title")
+      Text(viewStore.movie.title)
         .font(.system(size: 30, weight: .bold))
         .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(.white)
       
       HStack {
-        Text("3.5")
+        Text("\(Int(viewStore.movie.rating))")
           .font(.system(size: 22, weight: .medium))
           .foregroundStyle(.white)
         
-        RatingView(rating: 3.5, starSize: .compact)
+        RatingView(rating: viewStore.movie.rating, starSize: .compact)
       }
       .frame(maxWidth: .infinity, alignment: .leading)
       
-      Text("Action, Comedy, Crime")
+      Text(viewStore.movie.genre.joined(separator: ", "))
         .font(.system(size: 14))
         .foregroundStyle(.white)
         .frame(maxWidth: .infinity, alignment: .leading)
       
-      Text("The world's most lethal odd couple - bodyguard Michael Bryce and Darius Kincaid - are back on anoth most lethal odd couple - bodyguard Michael Bryce anan Darius Kincaid....")
+      Text(viewStore.movie.description)
         .font(.system(size: 16))
         .frame(maxWidth: .infinity, alignment: .leading)
         .multilineTextAlignment(.leading)
@@ -101,9 +112,10 @@ struct DetailView: View {
       }
       .frame(maxWidth: .infinity)
       .padding(.top, 7)
+      .padding(.bottom)
     }
     .padding(.horizontal, 16)
-    .background(LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom))
+    .background(LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .center))
   }
 }
 
@@ -111,5 +123,8 @@ struct DetailView: View {
 // MARK: - Preview
 
 #Preview {
-  DetailView()
+  let store = Store(initialState: DetailFeature.State(movie: .mock)) {
+    DetailFeature()
+  }
+  DetailView(store: store)
 }
