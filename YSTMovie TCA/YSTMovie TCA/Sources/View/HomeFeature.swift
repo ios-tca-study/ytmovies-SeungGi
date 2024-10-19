@@ -35,19 +35,13 @@ struct HomeFeature: Reducer {
   
   // MARK: - Properties
   
-  let latestMovieUseCase: LatestMovieUseCase
-  let topFiveMovieUseCase: TopFiveMovieUseCase
+  @Dependency(\.latestMovieUseCase) private var latestMovieUseCase: LatestMovieUseCase
+  @Dependency(\.topFiveMovieUseCase) private var topFiveMovieUseCase: TopFiveMovieUseCase
   
   
   // MARK: - Initializers
   
-  init(
-    latestMovieUseCase: LatestMovieUseCase,
-    topFiveMovieUseCase: TopFiveMovieUseCase
-  ) {
-    self.latestMovieUseCase = latestMovieUseCase
-    self.topFiveMovieUseCase = topFiveMovieUseCase
-  }
+  init() { }
   
   
   // MARK: - Reducer

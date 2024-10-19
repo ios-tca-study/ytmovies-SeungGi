@@ -127,13 +127,7 @@ import Moya
 
 struct SearchView_Previews: PreviewProvider {
   static var previews: some View {
-    let service = MoyaProvider<YTSAPI>()
-    let repository = YTSMovieRepositoryImpl(service: service)
-    let searchMovieUseCase = SearchMovieUseCase(repository: repository)
-    
-    let store = Store(initialState: SearchFeature.State()) {
-      SearchFeature(searchMovieUseCase: searchMovieUseCase)
-    }
+    let store = Store(initialState: SearchFeature.State()) { SearchFeature() }
     
     SearchView(store: store)
   }

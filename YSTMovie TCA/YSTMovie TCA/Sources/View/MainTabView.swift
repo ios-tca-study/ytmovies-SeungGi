@@ -15,13 +15,7 @@ struct MainTabView: View {
   var body: some View {
     TabView {
       Tab("Home", image: "home") {
-        let service = MoyaProvider<YTSAPI>()
-        let repository = YTSMovieRepositoryImpl(service: service)
-        let latestMovieUseCase = LatestMovieUseCase(repository: repository)
-        let topFiveMovieUseCase = TopFiveMovieUseCase(repository: repository)
-        let store = Store(initialState: HomeFeature.State()) {
-          HomeFeature(latestMovieUseCase: latestMovieUseCase, topFiveMovieUseCase: topFiveMovieUseCase)
-        }
+        let store = Store(initialState: HomeFeature.State()) { HomeFeature() }
         
         NavigationView {
           HomeView(store: store)
@@ -29,12 +23,7 @@ struct MainTabView: View {
       }
       
       Tab("Search", image: "search") {
-        let service = MoyaProvider<YTSAPI>()
-        let repository = YTSMovieRepositoryImpl(service: service)
-        let searchMovieUseCase = SearchMovieUseCase(repository: repository)
-        let store = Store(initialState: SearchFeature.State()) {
-          SearchFeature(searchMovieUseCase: searchMovieUseCase)
-        }
+        let store = Store(initialState: SearchFeature.State()) { SearchFeature() }
         
         NavigationView {
           SearchView(store: store)

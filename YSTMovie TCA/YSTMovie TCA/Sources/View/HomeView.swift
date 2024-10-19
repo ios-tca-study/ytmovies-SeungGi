@@ -34,12 +34,7 @@ struct HomeView: View {
           send: HomeFeature.Action.showDiscoverView
         )
       ) {
-        let service = MoyaProvider<YTSAPI>()
-        let repository = YTSMovieRepositoryImpl(service: service)
-        let searchMovieUseCase = SearchMovieUseCase(repository: repository)
-        let store = Store(initialState: DiscoverFeature.State()) {
-          DiscoverFeature(searchMovieUseCase: searchMovieUseCase)
-        }
+        let store = Store(initialState: DiscoverFeature.State()) { DiscoverFeature() }
         DiscoverView(store: store)
       }
       .onFirstAppear {
@@ -124,14 +119,7 @@ import Moya
 
 struct HomeView_Previews: PreviewProvider {
   static var previews: some View {
-    let service = MoyaProvider<YTSAPI>()
-    let repository = YTSMovieRepositoryImpl(service: service)
-    let latestMovieUseCase = LatestMovieUseCase(repository: repository)
-    let topFiveMovieUseCase = TopFiveMovieUseCase(repository: repository)
-    
-    let store = Store(initialState: HomeFeature.State()) {
-      HomeFeature(latestMovieUseCase: latestMovieUseCase, topFiveMovieUseCase: topFiveMovieUseCase)
-    }
+    let store = Store(initialState: HomeFeature.State()) { HomeFeature() }
     
     HomeView(store: store)
   }
