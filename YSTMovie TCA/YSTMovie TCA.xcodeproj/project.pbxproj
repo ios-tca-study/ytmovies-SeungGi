@@ -22,19 +22,11 @@
 			remoteGlobalIDString = 8EAD45F42C9E8A32008D521F;
 			remoteInfo = "YSTMovie TCA";
 		};
-		8EAD46102C9E8A34008D521F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8EAD45ED2C9E8A32008D521F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8EAD45F42C9E8A32008D521F;
-			remoteInfo = "YSTMovie TCA";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		8EAD45F52C9E8A32008D521F /* YSTMovie TCA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "YSTMovie TCA.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EAD46052C9E8A34008D521F /* YSTMovie TCATests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "YSTMovie TCATests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8EAD460F2C9E8A34008D521F /* YSTMovie TCAUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "YSTMovie TCAUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -46,11 +38,6 @@
 		8EAD46082C9E8A34008D521F /* YSTMovie TCATests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "YSTMovie TCATests";
-			sourceTree = "<group>";
-		};
-		8EAD46122C9E8A34008D521F /* YSTMovie TCAUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "YSTMovie TCAUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,13 +62,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8EAD460C2C9E8A34008D521F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -90,7 +70,6 @@
 			children = (
 				8EAD45F72C9E8A32008D521F /* YSTMovie TCA */,
 				8EAD46082C9E8A34008D521F /* YSTMovie TCATests */,
-				8EAD46122C9E8A34008D521F /* YSTMovie TCAUITests */,
 				8EAD45F62C9E8A32008D521F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -100,7 +79,6 @@
 			children = (
 				8EAD45F52C9E8A32008D521F /* YSTMovie TCA.app */,
 				8EAD46052C9E8A34008D521F /* YSTMovie TCATests.xctest */,
-				8EAD460F2C9E8A34008D521F /* YSTMovie TCAUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -158,29 +136,6 @@
 			productReference = 8EAD46052C9E8A34008D521F /* YSTMovie TCATests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		8EAD460E2C9E8A34008D521F /* YSTMovie TCAUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 8EAD461F2C9E8A34008D521F /* Build configuration list for PBXNativeTarget "YSTMovie TCAUITests" */;
-			buildPhases = (
-				8EAD460B2C9E8A34008D521F /* Sources */,
-				8EAD460C2C9E8A34008D521F /* Frameworks */,
-				8EAD460D2C9E8A34008D521F /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				8EAD46112C9E8A34008D521F /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				8EAD46122C9E8A34008D521F /* YSTMovie TCAUITests */,
-			);
-			name = "YSTMovie TCAUITests";
-			packageProductDependencies = (
-			);
-			productName = "YSTMovie TCAUITests";
-			productReference = 8EAD460F2C9E8A34008D521F /* YSTMovie TCAUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -195,10 +150,6 @@
 						CreatedOnToolsVersion = 16.0;
 					};
 					8EAD46042C9E8A34008D521F = {
-						CreatedOnToolsVersion = 16.0;
-						TestTargetID = 8EAD45F42C9E8A32008D521F;
-					};
-					8EAD460E2C9E8A34008D521F = {
 						CreatedOnToolsVersion = 16.0;
 						TestTargetID = 8EAD45F42C9E8A32008D521F;
 					};
@@ -225,7 +176,6 @@
 			targets = (
 				8EAD45F42C9E8A32008D521F /* YSTMovie TCA */,
 				8EAD46042C9E8A34008D521F /* YSTMovie TCATests */,
-				8EAD460E2C9E8A34008D521F /* YSTMovie TCAUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -239,13 +189,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8EAD46032C9E8A34008D521F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8EAD460D2C9E8A34008D521F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -269,13 +212,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8EAD460B2C9E8A34008D521F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -283,11 +219,6 @@
 			isa = PBXTargetDependency;
 			target = 8EAD45F42C9E8A32008D521F /* YSTMovie TCA */;
 			targetProxy = 8EAD46062C9E8A34008D521F /* PBXContainerItemProxy */;
-		};
-		8EAD46112C9E8A34008D521F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8EAD45F42C9E8A32008D521F /* YSTMovie TCA */;
-			targetProxy = 8EAD46102C9E8A34008D521F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -507,40 +438,6 @@
 			};
 			name = Release;
 		};
-		8EAD46202C9E8A34008D521F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 497P4L97SV;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.wallaby.YSTMovie-TCAUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "YSTMovie TCA";
-			};
-			name = Debug;
-		};
-		8EAD46212C9E8A34008D521F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 497P4L97SV;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.wallaby.YSTMovie-TCAUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "YSTMovie TCA";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -567,15 +464,6 @@
 			buildConfigurations = (
 				8EAD461D2C9E8A34008D521F /* Debug */,
 				8EAD461E2C9E8A34008D521F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		8EAD461F2C9E8A34008D521F /* Build configuration list for PBXNativeTarget "YSTMovie TCAUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				8EAD46202C9E8A34008D521F /* Debug */,
-				8EAD46212C9E8A34008D521F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
