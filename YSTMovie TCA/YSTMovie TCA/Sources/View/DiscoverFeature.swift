@@ -32,14 +32,13 @@ struct DiscoverFeature: Reducer {
   
   // MARK: - Properties
   
-  private let searchMovieUseCase: SearchMovieUseCase
+  
+  @Dependency(\.searchMovieUseCase) private var searchMovieUseCase: SearchMovieUseCase
   
   
   // MARK: - Initializers
   
-  init(searchMovieUseCase: SearchMovieUseCase) {
-    self.searchMovieUseCase = searchMovieUseCase
-  }
+  init() { }
   
   
   // MARK: - Reducer
