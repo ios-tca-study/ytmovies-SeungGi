@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23231" systemVersion="24B5070a" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="BookmarkMovieEntity" representedClassName="BookmarkMovieEntity" syncable="YES" codeGenerationType="class">
-        <attribute name="genre" optional="YES" attributeType="Transformable" customClassName="[String]"/>
+        <attribute name="genre" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[String]"/>
         <attribute name="id" attributeType="String"/>
         <attribute name="isBookmarked" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="movieDescription" optional="YES" attributeType="String"/>
