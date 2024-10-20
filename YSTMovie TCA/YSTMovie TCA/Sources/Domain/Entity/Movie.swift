@@ -13,7 +13,7 @@ struct Movie: Identifiable, Equatable, Hashable {
   let thumbnailImageUrl: String
   let description: String
   let rating: Double
-  let isBookmarked: Bool
+  var isBookmarked: Bool
   let genre: [String]
 }
 
