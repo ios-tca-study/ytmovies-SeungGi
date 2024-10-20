@@ -31,7 +31,11 @@ struct MainTabView: View {
       }
       
       Tab("bookmark", image: "bookmark") {
-        BookmarkView()
+        let store = Store(initialState: BookmarkFeature.State()) { BookmarkFeature() }
+        
+        NavigationView {
+          BookmarkView(store: store)
+        }
       }
     }
     .toolbar(.hidden, for: .navigationBar)

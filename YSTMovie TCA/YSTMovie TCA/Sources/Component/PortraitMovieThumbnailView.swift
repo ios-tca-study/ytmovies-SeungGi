@@ -7,59 +7,67 @@
 
 import SwiftUI
 import Kingfisher
+import ComposableArchitecture
 
 struct PortraitMovieThumbnailView: View {
   
   // MARK: - Properties
   
-  let movie: Movie
+  let store: StoreOf<MovieThumbnailFeature>
+  typealias ViewStoreType = ViewStore<MovieThumbnailFeature.State, MovieThumbnailFeature.Action>
   
   
   // MARK: - Views
   
   var body: some View {
-    VStack(spacing: 5) {
-      ZStack {
-        Color.gray50
-          .overlay {
-            KFImage(URL(string: movie.thumbnailImageUrl))
-              .resizable()
-              .aspectRatio(contentMode: .fill)
-          }
-      }
-      .aspectRatio(2/3, contentMode: .fit)
-      .clipShape(RoundedRectangle(cornerRadius: 15))
-     
-      VStack(spacing: 0) {
-        Text(movie.title)
-          .font(.system(size: 18, weight: .semibold))
-          .frame(maxWidth: .infinity, alignment: .leading)
-          .multilineTextAlignment(.leading)
-          .foregroundStyle(.white)
-        
-        HStack(spacing: 5) {
-          Text(movie.rating.description)
-            .font(.system(size: 18, weight: .medium))
+    WithViewStore(store, observe: { $0 }) { viewStore in
+      VStack(spacing: 5) {
+        ZStack {
+          Color.gray50
+            .overlay {
+              KFImage(URL(string: viewStore.movie.thumbnailImageUrl))
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+            }
+        }
+        .aspectRatio(2/3, contentMode: .fit)
+        .clipShape(RoundedRectangle(cornerRadius: 15))
+       
+        VStack(spacing: 0) {
+          Text(viewStore.movie.title)
+            .font(.system(size: 18, weight: .semibold))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .multilineTextAlignment(.leading)
             .foregroundStyle(.white)
           
-          Image.star_fill
-            .resizable()
-            .frame(width: 20, height: 20)
+          HStack(spacing: 5) {
+            Text(viewStore.movie.rating.description)
+              .font(.system(size: 18, weight: .medium))
+              .foregroundStyle(.white)
+            
+            Image.star_fill
+              .resizable()
+              .frame(width: 20, height: 20)
+          }
+          .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
       }
-    }
-    .frame(maxWidth: .infinity)
-    .overlay {
-      ZStack {
-        (movie.isBookmarked ? Image.bookmark_fill : Image.bookmark)
-          .resizable()
-          .aspectRatio(contentMode: .fit)
-          .frame(height: 24)
-          .foregroundStyle(movie.isBookmarked ? .accent : .white)
+      .frame(maxWidth: .infinity)
+      .overlay {
+        ZStack {
+          Button {
+            viewStore.send(.toggleBookmark)
+          } label: {
+            (viewStore.movie.isBookmarked ? Image.bookmark_fill : Image.bookmark)
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(height: 24)
+              .foregroundStyle(viewStore.movie.isBookmarked ? .accent : .white)
+          }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+        .padding(16)
       }
-      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-      .padding(16)
     }
   }
 }
@@ -68,8 +76,11 @@ struct PortraitMovieThumbnailView: View {
 // MARK: - Preview
 
 #Preview {
+  let store = Store(initialState: MovieThumbnailFeature.State(movie: .mock)) {
+    MovieThumbnailFeature()
+  }
   ZStack {
-    PortraitMovieThumbnailView(movie: .mock)
+    PortraitMovieThumbnailView(store: store)
   }
   .frame(maxWidth: .infinity, maxHeight: .infinity)
   .background(.black)

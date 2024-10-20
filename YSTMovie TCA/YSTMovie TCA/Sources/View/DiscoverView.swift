@@ -55,7 +55,10 @@ struct DiscoverView: View {
                   NavigationLink {
                     DetailView(store: store)
                   } label: {
-                    PortraitMovieThumbnailView(movie: movie)
+                    let store = Store(initialState: MovieThumbnailFeature.State(movie: movie)) {
+                      MovieThumbnailFeature()
+                    }
+                    PortraitMovieThumbnailView(store: store)
                       // 마지막 아이템이 처음 보여지는 시점에 데이터를 더 불러오도록 요청
                       .onFirstAppear {
                         if movie == viewStore.state.movies.last {

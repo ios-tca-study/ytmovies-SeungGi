@@ -95,7 +95,11 @@ struct SearchView: View {
           NavigationLink {
             DetailView(store: store)
           } label: {
-            PortraitMovieThumbnailViewLarge(movie: movie)
+            let store = Store(initialState: MovieThumbnailFeature.State(movie: movie)) {
+              MovieThumbnailFeature()
+            }
+            
+            PortraitMovieThumbnailViewLarge(store: store)
               .onFirstAppear {
                 if movie == viewStore.state.movies.last {
                   viewStore.send(.loadMore)
