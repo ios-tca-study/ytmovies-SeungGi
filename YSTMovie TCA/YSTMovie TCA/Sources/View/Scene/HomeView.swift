@@ -63,7 +63,10 @@ struct HomeView: View {
                 DetailFeature()
               }
               NavigationLink(destination: DetailView(store: store)) {
-                LandscapeMovieThumbnailViewRegular(movie: movie)
+                let store = Store(initialState: MovieThumbnailFeature.State(movie: movie)) {
+                  MovieThumbnailFeature()
+                }
+                LandscapeMovieThumbnailViewRegular(store: store)
               }
             }
           }
@@ -105,7 +108,10 @@ struct HomeView: View {
             DetailFeature()
           }
           NavigationLink(destination: DetailView(store: store)) {
-            PortraitMovieThumbnailViewLarge(movie: latestMovie)
+            let store = Store(initialState: MovieThumbnailFeature.State(movie: latestMovie)) {
+              MovieThumbnailFeature()
+            }
+            PortraitMovieThumbnailViewLarge(store: store)
             .padding(16)
           }
         }
