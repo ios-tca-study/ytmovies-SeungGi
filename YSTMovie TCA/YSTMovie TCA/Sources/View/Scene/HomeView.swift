@@ -12,44 +12,37 @@ struct HomeView: View {
   
   // MARK: - Properties
   
-  let store: StoreOf<HomeFeature>
+  @Bindable var store: StoreOf<HomeFeature>
   
   
   // MARK: - Views
   
   var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
+    NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
       ScrollView {
         VStack(spacing: 30) {
-          topFiveSection(viewStore: viewStore)
+          topFiveSection()
             .padding(.top, 33)
           
-          latestSection(viewStore: viewStore)
+          latestSection()
         }
       }
       .background(Color.black)
-      .navigationDestination(
-        isPresented: viewStore.binding(
-          get: \.isDiscoverViewShown,
-          send: HomeFeature.Action.showDiscoverView
-        )
-      ) {
-        let store = Store(initialState: DiscoverFeature.State()) { DiscoverFeature() }
-        DiscoverView(store: store)
-      }
       .onFirstAppear {
-        viewStore.send(.loadData)
+        store.send(.loadData)
       }
+    } destination: { store in
+      DiscoverView(store: store)
     }
   }
   
-  private func topFiveSection(viewStore: ViewStore<HomeFeature.State, HomeFeature.Action>) -> some View {
+  private func topFiveSection() -> some View {
     VStack(spacing: 20) {
       LargeTitleText(title: "Top Five")
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
       
-      if viewStore.isLoading {
+      if store.isLoading {
         VStack {
           ProgressView()
             .tint(.white)
@@ -58,7 +51,7 @@ struct HomeView: View {
       } else {
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(alignment: .top, spacing: 20) {
-            ForEach(viewStore.topFiveMovies) { movie in
+            ForEach(store.topFiveMovies) { movie in
               let store = Store(initialState: DetailFeature.State(movie: movie)) {
                 DetailFeature()
               }
@@ -76,7 +69,7 @@ struct HomeView: View {
     }
   }
   
-  private func latestSection(viewStore: ViewStore<HomeFeature.State, HomeFeature.Action>) -> some View {
+  private func latestSection() -> some View {
     VStack(spacing: 20) {
       HStack(spacing: 0) {
         LargeTitleText(title: "Latest")
@@ -84,9 +77,9 @@ struct HomeView: View {
         Spacer()
         
         Button {
-          viewStore.send(.showDiscoverView(true))
+          
         } label: {
-          if !viewStore.isLoading {
+          if !store.isLoading {
             Text("SEE MORE")
               .font(.system(size: 16))
               .foregroundColor(.accentColor)
@@ -96,8 +89,8 @@ struct HomeView: View {
       .frame(maxWidth: .infinity, alignment: .leading)
       .padding(.horizontal, 16)
       
-      if let latestMovie = viewStore.latestMovie {
-        if viewStore.isLoading {
+      if let latestMovie = store.latestMovie {
+        if store.isLoading {
           VStack {
             ProgressView()
               .tint(.white)

@@ -12,8 +12,7 @@ struct SearchView: View {
   
   // MARK: - Properties
   
-  let store: StoreOf<SearchFeature>
-  typealias ViewStoreType = ViewStore<SearchFeature.State, SearchFeature.Action>
+  @Bindable var store: StoreOf<SearchFeature>
   
   @Environment(\.dismiss) private var dismiss
   @FocusState private var isFocused
@@ -23,24 +22,22 @@ struct SearchView: View {
   // MARK: - Views
   
   var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
-      VStack {
-        navigationView()
-          .padding(.top, 33)
-        
-        textField(viewStore: viewStore)
-          .padding(.horizontal, 16)
-        
-        if viewStore.isLoading && viewStore.page == 1 {
-          Spacer()
-          ProgressView()
-          Spacer()
-        } else {
-          searchResult(viewStore: viewStore)
-        }
+    VStack {
+      navigationView()
+        .padding(.top, 33)
+      
+      textField()
+        .padding(.horizontal, 16)
+      
+      if store.isLoading && store.page == 1 {
+        Spacer()
+        ProgressView()
+        Spacer()
+      } else {
+        searchResult()
       }
-      .background(.black)
     }
+    .background(.black)
   }
   
   private func navigationView() -> some View {
@@ -59,7 +56,7 @@ struct SearchView: View {
     .padding(.horizontal, 16)
   }
   
-  private func textField(viewStore: ViewStoreType) -> some View {
+  private func textField() -> some View {
     RoundedRectangle(cornerRadius: 10)
       .fill(.gray70)
       .frame(maxWidth: .infinity, maxHeight: 70)
@@ -70,7 +67,7 @@ struct SearchView: View {
             .frame(width: 20, height: 20)
             .foregroundStyle(.white)
           
-          TextField("Search", text: viewStore.binding(get: \.term, send: SearchFeature.Action.termChanged))
+          TextField("Search", text: $store.term.sending(\.termChanged))
             .font(.system(size: 18, weight: .medium))
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
@@ -84,25 +81,25 @@ struct SearchView: View {
       }
   }
   
-  private func searchResult(viewStore: ViewStoreType) -> some View {
+  private func searchResult() -> some View {
     ScrollView(showsIndicators: false) {
       LazyVStack(spacing: 20) {
-        ForEach(viewStore.movies) { movie in
-          let store = Store(initialState: DetailFeature.State(movie: movie)) {
+        ForEach(store.movies) { movie in
+          let detailFeatureStore = Store(initialState: DetailFeature.State(movie: movie)) {
             DetailFeature()
           }
           
           NavigationLink {
-            DetailView(store: store)
+            DetailView(store: detailFeatureStore)
           } label: {
-            let store = Store(initialState: MovieThumbnailFeature.State(movie: movie)) {
+            let movieThumbnailFeatureStore = Store(initialState: MovieThumbnailFeature.State(movie: movie)) {
               MovieThumbnailFeature()
             }
             
-            PortraitMovieThumbnailViewLarge(store: store)
+            PortraitMovieThumbnailViewLarge(store: movieThumbnailFeatureStore)
               .onFirstAppear {
-                if movie == viewStore.state.movies.last {
-                  viewStore.send(.loadMore)
+                if movie == store.state.movies.last {
+                  store.send(.loadMore)
                 }
               }
           }
@@ -110,7 +107,7 @@ struct SearchView: View {
 
         // 맨 마지막으로 스크롤 했을때 ProgressView onAppear 시점에
         // 더 불러오기
-        if !viewStore.movies.isEmpty && viewStore.isLoading {
+        if !store.movies.isEmpty && store.isLoading {
           VStack {
             ProgressView()
           }

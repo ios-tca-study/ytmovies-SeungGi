@@ -8,10 +8,12 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct DetailFeature: Reducer {
+@Reducer
+struct DetailFeature {
   
   // MARK: - State, Action
   
+  @ObservableState
   struct State: Equatable {
     var movie: Movie
   }
@@ -24,5 +26,10 @@ struct DetailFeature: Reducer {
   
   // MARK: - Reducer
   
-  func reduce(into state: inout State, action: Action) -> Effect<Action> { }
+  @Dependency(\.uuid) var uuid
+  var body: some ReducerOf<Self> {
+    Reduce { _, _ in
+      return .none
+    }
+  }
 }

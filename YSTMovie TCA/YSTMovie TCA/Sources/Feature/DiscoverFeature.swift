@@ -13,6 +13,7 @@ struct DiscoverFeature: Reducer {
   
   // MARK: - State, Action
   
+  @ObservableState
   struct State: Equatable {
     var isLoading: Bool = false
     var movies: [Movie] = []
@@ -21,7 +22,7 @@ struct DiscoverFeature: Reducer {
     var isLastPage: Bool = false
   }
   
-  enum Action {
+  enum Action: Equatable {
     case search
     case loadMore
     case setMovies([Movie])

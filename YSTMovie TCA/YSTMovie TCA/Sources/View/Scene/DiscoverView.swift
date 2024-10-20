@@ -12,10 +12,9 @@ struct DiscoverView: View {
   
   // MARK: - Properties
   
-  let store: StoreOf<DiscoverFeature>
-  typealias ViewStoreType = ViewStore<DiscoverFeature.State, DiscoverFeature.Action>
-  
+  @Bindable var store: StoreOf<DiscoverFeature>
   @Environment(\.dismiss) private var dismiss
+  
   private var columns: [GridItem] = [
     GridItem(.adaptive(minimum: 160, maximum: 300), spacing: 15)
   ]
@@ -31,63 +30,61 @@ struct DiscoverView: View {
   // MARK: - Views
   
   var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
-      VStack(spacing: 0) {
-        navigationView()
-          .padding(.top, 33)
-        
-        genreSelectorView(viewStore: viewStore)
-          .frame(height: 50)
-        
-        if viewStore.isLoading == true && viewStore.page == 1 {
-          Spacer()
-          ProgressView()
-          Spacer()
-        } else {
-          ScrollView {
-            VStack {
-              LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
-                ForEach(viewStore.movies) { movie in
-                  let store = Store(initialState: DetailFeature.State(movie: movie)) {
-                    DetailFeature()
+    VStack(spacing: 0) {
+      navigationView()
+        .padding(.top, 33)
+      
+      genreSelectorView()
+        .frame(height: 50)
+      
+      if store.isLoading == true && store.page == 1 {
+        Spacer()
+        ProgressView()
+        Spacer()
+      } else {
+        ScrollView {
+          VStack {
+            LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
+              ForEach(store.movies) { movie in
+                let detailFeatureStore = Store(initialState: DetailFeature.State(movie: movie)) {
+                  DetailFeature()
+                }
+                
+                NavigationLink {
+                  DetailView(store: detailFeatureStore)
+                } label: {
+                  let movieThumbnailFeatureStore = Store(initialState: MovieThumbnailFeature.State(movie: movie)) {
+                    MovieThumbnailFeature()
                   }
-                  
-                  NavigationLink {
-                    DetailView(store: store)
-                  } label: {
-                    let store = Store(initialState: MovieThumbnailFeature.State(movie: movie)) {
-                      MovieThumbnailFeature()
-                    }
-                    PortraitMovieThumbnailView(store: store)
-                      // 마지막 아이템이 처음 보여지는 시점에 데이터를 더 불러오도록 요청
-                      .onFirstAppear {
-                        if movie == viewStore.state.movies.last {
-                          viewStore.send(.loadMore)
-                        }
+                  PortraitMovieThumbnailView(store: movieThumbnailFeatureStore)
+                    // 마지막 아이템이 처음 보여지는 시점에 데이터를 더 불러오도록 요청
+                    .onFirstAppear {
+                      if movie == store.state.movies.last {
+                        store.send(.loadMore)
                       }
-                  }
+                    }
                 }
-              }
-              
-              // 더 불러오기 로딩 뷰
-              if !viewStore.movies.isEmpty && viewStore.isLoading {
-                VStack {
-                  ProgressView()
-                }
-                .frame(height: 100)
               }
             }
-            .padding(.horizontal, 16)
+            
+            // 더 불러오기 로딩 뷰
+            if !store.movies.isEmpty && store.isLoading {
+              VStack {
+                ProgressView()
+              }
+              .frame(height: 100)
+            }
           }
-          .padding(.top, 20)
+          .padding(.horizontal, 16)
         }
+        .padding(.top, 20)
       }
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .background(.black)
-      .toolbarVisibility(.hidden, for: .navigationBar)
-      .onFirstAppear {
-        viewStore.send(.search)
-      }
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(.black)
+    .toolbarVisibility(.hidden, for: .navigationBar)
+    .onFirstAppear {
+      store.send(.search)
     }
   }
   
@@ -107,7 +104,7 @@ struct DiscoverView: View {
     .padding(.horizontal, 16)
   }
   
-  private func genreSelectorView(viewStore: ViewStoreType) -> some View {
+  private func genreSelectorView() -> some View {
     ScrollView(.horizontal, showsIndicators: false) {
       LazyHStack(spacing: 10) {
         ForEach(Genre.allCases, id: \.self) { genre in
@@ -116,10 +113,10 @@ struct DiscoverView: View {
           } label: {
             Text(genre.displayName)
               .font(.system(size: 14))
-              .foregroundStyle(genre == viewStore.state.genre ? .black : .white)
+              .foregroundStyle(genre == store.state.genre ? .black : .white)
               .padding(.horizontal, 16)
               .padding(.vertical, 4)
-              .background(genre == viewStore.state.genre ? .accent : .gray70)
+              .background(genre == store.state.genre ? .accent : .gray70)
               .clipShape(Capsule())
           }
         }

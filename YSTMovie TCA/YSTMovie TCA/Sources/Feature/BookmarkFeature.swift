@@ -8,10 +8,12 @@
 import Foundation
 import ComposableArchitecture
 
-struct BookmarkFeature: Reducer {
+@Reducer
+struct BookmarkFeature {
   
   // MARK: - State, Action
   
+  @ObservableState
   struct State: Equatable {
     var isLoading: Bool = false
     var movies: [Movie] = []
@@ -19,7 +21,7 @@ struct BookmarkFeature: Reducer {
     var isLastPage: Bool = false
   }
   
-  enum Action {
+  enum Action: Equatable {
     case load
     case loadMore
     case setMovies([Movie])
@@ -32,54 +34,58 @@ struct BookmarkFeature: Reducer {
   
   @Dependency(\.fetchBookmarkMovieUseCase) private var fetchBookmarkMovieUseCase
   
+  
   // MARK: - Initializers
   
   init() { }
   
+  
   // MARK: - Reducer
   
-  func reduce(into state: inout State, action: Action) -> Effect<Action> {
-    switch action {
-    case .load:
-      state.isLoading = true
-      state.isLastPage = false
-      state.page = 1
-      let currentPage = state.page
-      
-      return .run { send in
-        let movies = try await fetchBookmarkMovieUseCase.execute(limit: 10, page: currentPage)
-        await send(.setMovies(movies))
-        await send(.setLoadingState(false))
-      }
-      
-    case .loadMore:
-      state.isLoading = true
-      state.page += 1
-      let currentPage = state.page
-      return .run { send in
-        let movies = try await fetchBookmarkMovieUseCase.execute(limit: 10, page: currentPage)
-        await send(.appendMovies(movies))
-        await send(.setLoadingState(false))
-        if movies.isEmpty {
-          await send(.setLastPageState(true))
+  var body: some ReducerOf<Self> {
+    Reduce { state, action in
+      switch action {
+      case .load:
+        state.isLoading = true
+        state.isLastPage = false
+        state.page = 1
+        let currentPage = state.page
+        
+        return .run { send in
+          let movies = try await fetchBookmarkMovieUseCase.execute(limit: 10, page: currentPage)
+          await send(.setMovies(movies))
+          await send(.setLoadingState(false))
         }
+        
+      case .loadMore:
+        state.isLoading = true
+        state.page += 1
+        let currentPage = state.page
+        return .run { send in
+          let movies = try await fetchBookmarkMovieUseCase.execute(limit: 10, page: currentPage)
+          await send(.appendMovies(movies))
+          await send(.setLoadingState(false))
+          if movies.isEmpty {
+            await send(.setLastPageState(true))
+          }
+        }
+        
+      case .setMovies(let movies):
+        state.movies = movies
+        return .none
+        
+      case .appendMovies(let movies):
+        state.movies.append(contentsOf: movies)
+        return .none
+        
+      case .setLoadingState(let isLoading):
+        state.isLoading = isLoading
+        return .none
+        
+      case .setLastPageState(let isLastPage):
+        state.isLastPage = isLastPage
+        return .none
       }
-      
-    case .setMovies(let movies):
-      state.movies = movies
-      return .none
-      
-    case .appendMovies(let movies):
-      state.movies.append(contentsOf: movies)
-      return .none
-      
-    case .setLoadingState(let isLoading):
-      state.isLoading = isLoading
-      return .none
-      
-    case .setLastPageState(let isLastPage):
-      state.isLastPage = isLastPage
-      return .none
     }
   }
 }

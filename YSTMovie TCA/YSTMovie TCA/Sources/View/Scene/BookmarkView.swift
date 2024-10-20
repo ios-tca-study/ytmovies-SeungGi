@@ -12,8 +12,7 @@ struct BookmarkView: View {
   
   // MARK: - Properties
   
-  var store: StoreOf<BookmarkFeature>
-  typealias ViewStoreType = ViewStore<BookmarkFeature.State, BookmarkFeature.Action>
+  @Bindable var store: StoreOf<BookmarkFeature>
   @Environment(\.dismiss) private var dismiss
   
   
@@ -22,23 +21,21 @@ struct BookmarkView: View {
   // MARK: - Views
   
   var body: some View {
-    WithViewStore(store, observe: { $0 }) { viewStore in
-      VStack {
-        navigationView()
-          .padding(.top, 33)
-        
-        if viewStore.isLoading {
-          Spacer()
-          ProgressView()
-          Spacer()
-        } else {
-          bookmarkMovieListView(viewStore: viewStore)
-        }
+    VStack {
+      navigationView()
+        .padding(.top, 33)
+      
+      if store.isLoading {
+        Spacer()
+        ProgressView()
+        Spacer()
+      } else {
+        bookmarkMovieListView()
       }
-      .background(.black)
-      .onFirstAppear {
-        viewStore.send(.load)
-      }
+    }
+    .background(.black)
+    .onFirstAppear {
+      store.send(.load)
     }
   }
   
@@ -58,24 +55,24 @@ struct BookmarkView: View {
     .padding(.horizontal, 16)
   }
 
-  private func bookmarkMovieListView(viewStore: ViewStoreType) -> some View {
+  private func bookmarkMovieListView() -> some View {
     ScrollView(showsIndicators: false) {
       VStack(spacing: 20) {
-        ForEach(viewStore.movies) { movie in
+        ForEach(store.movies, id: \.id) { movie in
           NavigationLink {
-            let store = Store(initialState: DetailFeature.State(movie: movie)) {
+            let detailFeatureStore = Store(initialState: DetailFeature.State(movie: movie)) {
               DetailFeature()
             }
-            DetailView(store: store)
+            DetailView(store: detailFeatureStore)
           } label: {
-            let store = Store(initialState: MovieThumbnailFeature.State(movie: movie)) {
+            let movieThumbnailStore = Store(initialState: MovieThumbnailFeature.State(movie: movie)) {
               MovieThumbnailFeature()
             }
-            PortraitMovieThumbnailViewLarge(store: store)
+            PortraitMovieThumbnailViewLarge(store: movieThumbnailStore)
               .onFirstAppear {
-                if viewStore.isLastPage == false
-                    && movie == viewStore.movies.last {
-                  viewStore.send(.loadMore)
+                if store.isLastPage == false
+                    && movie == store.movies.last {
+                  store.send(.loadMore)
                 }
               }
           }
@@ -85,7 +82,7 @@ struct BookmarkView: View {
       .padding(.vertical, 30)
     }
     .refreshable {
-      viewStore.send(.load)
+      store.send(.load)
     }
   }
 }

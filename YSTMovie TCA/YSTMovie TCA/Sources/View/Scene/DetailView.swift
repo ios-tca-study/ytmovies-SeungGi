@@ -13,36 +13,32 @@ struct DetailView: View {
   
   // MARK: - Properties
   
-  let store: StoreOf<DetailFeature>
-  typealias ViewStoreType = ViewStore<DetailFeature.State, DetailFeature.Action>
-  
+  @Bindable var store: StoreOf<DetailFeature>
   @Environment(\.dismiss) private var dismiss
   
   
   // MARK: - Views
   
   var body: some View {
-    WithViewStore(self.store, observe: { $0 }) { viewStore in
-      ZStack {
-        Color.black
-          .ignoresSafeArea()
-          .overlay {
-            KFImage(URL(string: viewStore.movie.thumbnailImageUrl))
-              .resizable()
-              .aspectRatio(contentMode: .fill)
-              .ignoresSafeArea()
-          }
-        
-        VStack {
-          navigationBar()
-          
-          Spacer()
-          
-          contentView(viewStore: viewStore)
+    ZStack {
+      Color.black
+        .ignoresSafeArea()
+        .overlay {
+          KFImage(URL(string: store.movie.thumbnailImageUrl))
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .ignoresSafeArea()
         }
+      
+      VStack {
+        navigationBar()
+        
+        Spacer()
+        
+        contentView()
       }
-      .toolbarVisibility(.hidden, for: .navigationBar)
     }
+    .toolbarVisibility(.hidden, for: .navigationBar)
   }
     
   private func navigationBar() -> some View {
@@ -71,28 +67,28 @@ struct DetailView: View {
     .padding(.top, 43)
   }
   
-  private func contentView(viewStore: ViewStoreType) -> some View {
+  private func contentView() -> some View {
     VStack(spacing: 10) {
-      Text(viewStore.movie.title)
+      Text(store.movie.title)
         .font(.system(size: 30, weight: .bold))
         .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(.white)
       
       HStack {
-        Text("\(Int(viewStore.movie.rating))")
+        Text("\(Int(store.movie.rating))")
           .font(.system(size: 22, weight: .medium))
           .foregroundStyle(.white)
         
-        RatingView(rating: viewStore.movie.rating, starSize: .compact)
+        RatingView(rating: store.movie.rating, starSize: .compact)
       }
       .frame(maxWidth: .infinity, alignment: .leading)
       
-      Text(viewStore.movie.genre.joined(separator: ", "))
+      Text(store.movie.genre.joined(separator: ", "))
         .font(.system(size: 14))
         .foregroundStyle(.white)
         .frame(maxWidth: .infinity, alignment: .leading)
       
-      Text(viewStore.movie.description)
+      Text(store.movie.description)
         .font(.system(size: 16))
         .frame(maxWidth: .infinity, alignment: .leading)
         .multilineTextAlignment(.leading)

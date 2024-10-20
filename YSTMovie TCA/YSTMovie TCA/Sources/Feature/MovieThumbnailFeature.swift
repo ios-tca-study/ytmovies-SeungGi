@@ -8,15 +8,17 @@
 import Foundation
 import ComposableArchitecture
 
-struct MovieThumbnailFeature: Reducer {
+@Reducer
+struct MovieThumbnailFeature {
   
   // MARK: - State, Action
   
+  @ObservableState
   struct State: Equatable {
     var movie: Movie
   }
   
-  enum Action {
+  enum Action: Equatable {
     case toggleBookmark
     case setBookmarked(Bool)
   }
@@ -35,27 +37,29 @@ struct MovieThumbnailFeature: Reducer {
   
   // MARK: - Reducer
   
-  func reduce(into state: inout State, action: Action) -> Effect<Action> {
-    switch action {
-    case .toggleBookmark:
-      let isBookmarked = state.movie.isBookmarked
-      
-      let movie = state.movie
-      if isBookmarked {
-        return .run { send in
-          try await removeBookmarkMovieUseCase.execute(movie: movie)
-          await send(.setBookmarked(false))
+  var body: some ReducerOf<Self> {
+    Reduce { state, action in
+      switch action {
+      case .toggleBookmark:
+        let isBookmarked = state.movie.isBookmarked
+        
+        let movie = state.movie
+        if isBookmarked {
+          return .run { send in
+            try await removeBookmarkMovieUseCase.execute(movie: movie)
+            await send(.setBookmarked(false))
+          }
+        } else {
+          return .run { send in
+            try await addBookmarkMovieUseCase.execute(movie: movie)
+            await send(.setBookmarked(true))
+          }
         }
-      } else {
-        return .run { send in
-          try await addBookmarkMovieUseCase.execute(movie: movie)
-          await send(.setBookmarked(true))
-        }
+        
+      case .setBookmarked(let isBookmarked):
+        state.movie.isBookmarked = isBookmarked
+        return .none
       }
-      
-    case .setBookmarked(let isBookmarked):
-      state.movie.isBookmarked = isBookmarked
-      return .none
     }
   }
 }
